@@ -36,7 +36,7 @@
  */
 - (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate  labelText:(NSString *)title CancelTitle:(NSString *)cancelTitle OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;
 
-//原作者方法
+//原方法 保留
 //- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate CancelTitle:(NSString *)cancelTitle OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;
 
 - (void)show;
