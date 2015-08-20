@@ -28,7 +28,7 @@ If you don't need show title ,you can this
     [sheet show];
 
     
-   ![HJCAtionSheet intro](https://github.com/sauteam/HJCActionSheet/intro.gif) 
+   ![HJCAtionSheet intro](https://github.com/sauteam/HJCActionSheet/blob/master/intro.gif) 
    
 ###License
 HJCActionSheet is under MIT License. See LICENSE file for more information. 
