@@ -416,6 +416,7 @@
 				04AC21331B2072E0007A780F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		04AC21341B2072E0007A780F /* Build configuration list for PBXNativeTarget "HJCActionSheetDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -424,6 +425,7 @@
 				04AC21361B2072E0007A780F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

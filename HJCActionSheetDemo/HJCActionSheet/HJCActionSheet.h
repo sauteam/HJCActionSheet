@@ -23,8 +23,6 @@
 
 @interface HJCActionSheet : UIView
 
-
-
 /**
  *  代理
  */
@@ -34,7 +32,10 @@
 /**
  *  创建对象方法
  */
-- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate  labelText:(NSString *)title CancelTitle:(NSString *)cancelTitle OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;
+- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate
+                       labelText:(NSString *)title
+                     CancelTitle:(NSString *)cancelTitle
+                     OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;
 
 //原方法 保留
 //- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate CancelTitle:(NSString *)cancelTitle OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;

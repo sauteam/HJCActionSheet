@@ -9,8 +9,9 @@
 #import "HJCActionSheet.h"
 
 // 每个按钮的高度
-#define BtnHeight 40
-#define labelTextHeight 35
+#define BtnHeight 45
+#define labelTextHeight 45
+
 // 取消按钮上面的间隔高度
 #define Margin 8
 
@@ -29,6 +30,8 @@
 // 字体
 #define HeitiLight(f) [UIFont fontWithName:@"STHeitiSC-Light" size:f]
 
+static CGFloat const spaceLine = 0.5;
+
 @interface HJCActionSheet (){
     int _tag;
 }
@@ -41,12 +44,16 @@
 
 @implementation HJCActionSheet
 
-- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate labelText:(NSString *)title CancelTitle:(NSString *)cancelTitle OtherTitles:(NSString *)otherTitles, ...{
+- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate
+                       labelText:(NSString *)title
+                     CancelTitle:(NSString *)cancelTitle
+                     OtherTitles:(NSString *)otherTitles, ...{
+    
     HJCActionSheet *actionSheet = [self init];
     self.actionSheet = actionSheet;
-    
     actionSheet.delegate = delegate;
     _labelText = title;
+    
     // 黑色遮盖
     actionSheet.frame = [UIScreen mainScreen].bounds;
     actionSheet.backgroundColor = [UIColor blackColor];
@@ -62,13 +69,11 @@
     [[UIApplication sharedApplication].keyWindow addSubview:sheetView];
     self.sheetView = sheetView;
     sheetView.hidden = YES;
-    
     _tag = 1;
     
     NSString* curStr;
     va_list list;
-    if(otherTitles)
-    {
+    if(otherTitles){
         [self setupBtnWithTitle:otherTitles];
         
         va_start(list, otherTitles);
@@ -91,7 +96,7 @@
     [btn setBackgroundImage:highImage forState:UIControlStateHighlighted];
     [btn setTitle:cancelTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    btn.titleLabel.font = HeitiLight(17);
+    btn.titleLabel.font = ScreenWidth>320?HeitiLight(18):HeitiLight(17);
     btn.tag = 0;
     [btn addTarget:self action:@selector(sheetBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.sheetView addSubview:btn];
@@ -100,8 +105,8 @@
 }
 
 - (void)show{
+    
     self.sheetView.hidden = NO;
-
     CGRect sheetViewF = self.sheetView.frame;
     sheetViewF.origin.y = ScreenHeight;
     self.sheetView.frame = sheetViewF;
@@ -112,40 +117,33 @@
     [UIView animateWithDuration:0.3 animations:^{
 
         self.sheetView.frame = newSheetViewF;
-        
         self.actionSheet.alpha = 0.8;
     }];
 }
 
 - (void)setupBtnWithTitle:(NSString *)title{
     
-    
 #pragma mark - add label
     if (_labelText.length > 0) {
         UILabel *titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, labelTextHeight)];
         titleLbl.text = _labelText;
         titleLbl.textAlignment = NSTextAlignmentCenter;
-        titleLbl.font = [UIFont systemFontOfSize:14.0];
-//        titleLbl.backgroundColor = HJCColor(234, 234, 234);
-        titleLbl.backgroundColor = GlobelBgColor;
+        titleLbl.font = [UIFont systemFontOfSize:13.0];
+        titleLbl.textColor = [UIColor grayColor];
+        titleLbl.backgroundColor = [UIColor whiteColor];
         [self.sheetView addSubview:titleLbl];
     }
-
+    
     // 创建按钮
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, (_labelText.length>0?labelTextHeight:0) + BtnHeight * (_tag - 1) , ScreenWidth, BtnHeight)];
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, (_labelText.length>0?labelTextHeight+spaceLine:0) + (BtnHeight + spaceLine)* (_tag - 1) , ScreenWidth, BtnHeight)];
     [btn setBackgroundImage:normalImage forState:UIControlStateNormal];
     [btn setBackgroundImage:highImage forState:UIControlStateHighlighted];
     [btn setTitle:title forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    btn.titleLabel.font = HeitiLight(17);
+    btn.titleLabel.font = ScreenWidth>320?HeitiLight(18):HeitiLight(17);
     btn.tag = _tag;
     [btn addTarget:self action:@selector(sheetBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.sheetView addSubview:btn];
-    
-    // 最上面画分割线
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 0.5)];
-    line.backgroundColor = GlobelSeparatorColor;
-    [btn addSubview:line];
     
     _tag ++;
 }
@@ -175,8 +173,8 @@
     }
 }
 
-- (UIImage*)createImageWithColor:(UIColor*)color
-{
+- (UIImage *)createImageWithColor:(UIColor*)color{
+    
     CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
