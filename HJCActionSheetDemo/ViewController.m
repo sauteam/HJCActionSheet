@@ -21,7 +21,7 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    HJCActionSheet *sheet = [[HJCActionSheet alloc] initWithDelegate:self labelText:@"" CancelTitle:@"取消" OtherTitles:@"拍照", @"从相册中选取",@"12863821653", nil];
+    HJCActionSheet *sheet = [[HJCActionSheet alloc] initWithDelegate:self labelText:@"HJCActionSheet" CancelTitle:@"取消" OtherTitles:@"拍照", @"从相册中选取", nil];
     [sheet show];
 }
 

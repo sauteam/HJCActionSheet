@@ -14,7 +14,7 @@
 
 @optional
 
-/** *  最上面的 buttonIndex 为1 依次递增*/
+/** *   buttonIndex 从上到下(1开始) 依次递增*/
 - (void)actionSheet:(HJCActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @end
@@ -24,8 +24,6 @@
 
 @property (nonatomic, weak) id <HJCActionSheetDelegate> delegate;
 
-
-/** * labelText nil 则无标题 */
 - (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate
                        labelText:(NSString *)title
                      CancelTitle:(NSString *)cancelTitle
