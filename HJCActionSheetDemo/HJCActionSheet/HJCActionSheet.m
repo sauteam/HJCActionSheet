@@ -4,36 +4,24 @@
 //
 //  Created by weixikeji on 15/5/11.
 //
-//
 
 #import "HJCActionSheet.h"
 
-// 每个按钮的高度
-#define BtnHeight 45
-#define labelTextHeight 45
+#define kActionSheetButtonHeight 45.f
+#define kActionSheetTitleHeight 45.f
+#define kActionSheetMargin 8
+#define kActionSheetScreenWidth [UIScreen mainScreen].bounds.size.width
+#define kActionSheetScreenHeight [UIScreen mainScreen].bounds.size.height
+#define kActionSheetButtonTitleStyle(f) [UIFont fontWithName:@"STHeitiSC-Light" size:f]
+#define kActionSheetButtonTitleFontSize kActionSheetScreenWidth>320?kActionSheetButtonTitleStyle(20.f):kActionSheetButtonTitleStyle(19.f)
+#define kActionSheetBackgroundColor [UIColor colorWithRed:237/255.0 green:240/255.0f blue:242/255.0f alpha:1]
+#define kActionSheetButtonBackgroundColor [UIColor whiteColor]
 
-// 取消按钮上面的间隔高度
-#define Margin 8
-
-#define HJCColor(r, g, b) [UIColor colorWithRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:1.0]
-// 背景色
-#define GlobelBgColor HJCColor(237, 240, 242)
-// 分割线颜色
-#define GlobelSeparatorColor HJCColor(226, 226, 226)
-// 普通状态下的图片
-#define normalImage [self createImageWithColor:HJCColor(255, 255, 255)]
-// 高亮状态下的图片
-#define highImage [self createImageWithColor:HJCColor(242, 242, 242)]
-
-#define ScreenWidth [UIScreen mainScreen].bounds.size.width
-#define ScreenHeight [UIScreen mainScreen].bounds.size.height
-// 字体
-#define HeitiLight(f) [UIFont fontWithName:@"STHeitiSC-Light" size:f]
-
-static CGFloat const spaceLine = 0.5;
+static CGFloat const spaceLine = 0.8f;
 
 @interface HJCActionSheet (){
     int _tag;
+    BOOL _contentTitle;
 }
 
 @property (nonatomic, weak) HJCActionSheet *actionSheet;
@@ -54,17 +42,18 @@ static CGFloat const spaceLine = 0.5;
     actionSheet.delegate = delegate;
     _labelText = title;
     
+    _contentTitle = (title.length > 0) && ![title isEqual:@""] && (title != nil);
     // 黑色遮盖
     actionSheet.frame = [UIScreen mainScreen].bounds;
     actionSheet.backgroundColor = [UIColor blackColor];
     [[UIApplication sharedApplication].keyWindow addSubview:actionSheet];
     actionSheet.alpha = 0.0;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(coverClick)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removeActionSheetView)];
     [actionSheet addGestureRecognizer:tap];
     
     // sheet
-    UIView *sheetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 0)];
-    sheetView.backgroundColor = GlobelBgColor;
+    UIView *sheetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kActionSheetScreenWidth, 0)];
+    sheetView.backgroundColor = kActionSheetBackgroundColor;
     sheetView.alpha = 0.9;
     [[UIApplication sharedApplication].keyWindow addSubview:sheetView];
     self.sheetView = sheetView;
@@ -87,16 +76,16 @@ static CGFloat const spaceLine = 0.5;
     CGRect sheetViewF = sheetView.frame;
     
 #pragma mark - add
-    sheetViewF.size.height = BtnHeight * _tag + Margin + (_labelText.length>0?labelTextHeight:0);
+    sheetViewF.size.height = kActionSheetButtonHeight * _tag + kActionSheetMargin + (_contentTitle?kActionSheetTitleHeight+spaceLine:0) + spaceLine * (_tag - 1);
     sheetView.frame = sheetViewF;
     
-    // 取消按钮
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, sheetView.frame.size.height - BtnHeight, ScreenWidth, BtnHeight)];
-    [btn setBackgroundImage:normalImage forState:UIControlStateNormal];
-    [btn setBackgroundImage:highImage forState:UIControlStateHighlighted];
+    // cancel button
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, sheetView.frame.size.height - kActionSheetButtonHeight - spaceLine, kActionSheetScreenWidth, kActionSheetButtonHeight);
     [btn setTitle:cancelTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    btn.titleLabel.font = ScreenWidth>320?HeitiLight(18):HeitiLight(17);
+    btn.titleLabel.font = kActionSheetButtonTitleFontSize;
+    btn.backgroundColor = kActionSheetButtonBackgroundColor;
     btn.tag = 0;
     [btn addTarget:self action:@selector(sheetBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.sheetView addSubview:btn];
@@ -108,11 +97,11 @@ static CGFloat const spaceLine = 0.5;
     
     self.sheetView.hidden = NO;
     CGRect sheetViewF = self.sheetView.frame;
-    sheetViewF.origin.y = ScreenHeight;
+    sheetViewF.origin.y = kActionSheetScreenHeight;
     self.sheetView.frame = sheetViewF;
     
     CGRect newSheetViewF = self.sheetView.frame;
-    newSheetViewF.origin.y = ScreenHeight - self.sheetView.frame.size.height;
+    newSheetViewF.origin.y = kActionSheetScreenHeight - self.sheetView.frame.size.height;
     
     [UIView animateWithDuration:0.3 animations:^{
 
@@ -124,23 +113,24 @@ static CGFloat const spaceLine = 0.5;
 - (void)setupBtnWithTitle:(NSString *)title{
     
 #pragma mark - add label
-    if (_labelText.length > 0) {
-        UILabel *titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, labelTextHeight)];
+    if (_contentTitle) {
+        UILabel *titleLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, kActionSheetScreenWidth, kActionSheetTitleHeight)];
         titleLbl.text = _labelText;
         titleLbl.textAlignment = NSTextAlignmentCenter;
-        titleLbl.font = [UIFont systemFontOfSize:13.0];
+        titleLbl.font = [UIFont systemFontOfSize:14.0f];
         titleLbl.textColor = [UIColor grayColor];
         titleLbl.backgroundColor = [UIColor whiteColor];
         [self.sheetView addSubview:titleLbl];
     }
     
-    // 创建按钮
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, (_labelText.length>0?labelTextHeight+spaceLine:0) + (BtnHeight + spaceLine)* (_tag - 1) , ScreenWidth, BtnHeight)];
-    [btn setBackgroundImage:normalImage forState:UIControlStateNormal];
-    [btn setBackgroundImage:highImage forState:UIControlStateHighlighted];
+    // other button
+    CGFloat padding = (_contentTitle?kActionSheetTitleHeight + spaceLine:0) + (kActionSheetButtonHeight + spaceLine) * (_tag - 1);
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0 ,padding, kActionSheetScreenWidth, kActionSheetButtonHeight);
     [btn setTitle:title forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    btn.titleLabel.font = ScreenWidth>320?HeitiLight(18):HeitiLight(17);
+    btn.titleLabel.font = kActionSheetButtonTitleFontSize;
+    btn.backgroundColor = kActionSheetButtonBackgroundColor;
     btn.tag = _tag;
     [btn addTarget:self action:@selector(sheetBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.sheetView addSubview:btn];
@@ -148,9 +138,9 @@ static CGFloat const spaceLine = 0.5;
     _tag ++;
 }
 
-- (void)coverClick{
+- (void)removeActionSheetView{
     CGRect sheetViewF = self.sheetView.frame;
-    sheetViewF.origin.y = ScreenHeight;
+    sheetViewF.origin.y = kActionSheetScreenHeight;
     
     [UIView animateWithDuration:0.2 animations:^{
         self.sheetView.frame = sheetViewF;
@@ -163,13 +153,13 @@ static CGFloat const spaceLine = 0.5;
 
 - (void)sheetBtnClick:(UIButton *)btn{
     if (btn.tag == 0) {
-        [self coverClick];
+        [self removeActionSheetView];
         return;
     }
     
     if ([self.delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
         [self.delegate actionSheet:self.actionSheet clickedButtonAtIndex:btn.tag];
-        [self coverClick];
+        [self removeActionSheetView];
     }
 }
 

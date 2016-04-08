@@ -14,31 +14,23 @@
 
 @optional
 
-/**
- *  点击按钮
- */
+/** *  最上面的 buttonIndex 为1 依次递增*/
 - (void)actionSheet:(HJCActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @end
 
 @interface HJCActionSheet : UIView
 
-/**
- *  代理
- */
+
 @property (nonatomic, weak) id <HJCActionSheetDelegate> delegate;
 
 
-/**
- *  创建对象方法
- */
+/** * labelText nil 则无标题 */
 - (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate
                        labelText:(NSString *)title
                      CancelTitle:(NSString *)cancelTitle
                      OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;
 
-//原方法 保留
-//- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate CancelTitle:(NSString *)cancelTitle OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;
 
 - (void)show;
 
