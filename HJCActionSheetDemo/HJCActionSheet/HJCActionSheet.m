@@ -32,16 +32,15 @@ static CGFloat const spaceLine = 0.8f;
 
 @implementation HJCActionSheet
 
-- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate
-                       labelText:(NSString *)title
-                     CancelTitle:(NSString *)cancelTitle
-                     OtherTitles:(NSString *)otherTitles, ...{
+- (instancetype)initWithTitle:(NSString *)title
+                     delegate:(id<HJCActionSheetDelegate>)delegate
+            cancelButtonTitle:(NSString *)cancelButtonTitle
+            otherButtonTitles:(NSString *)otherButtonTitles, ...{
     
     HJCActionSheet *actionSheet = [self init];
     self.actionSheet = actionSheet;
     actionSheet.delegate = delegate;
     _labelText = title;
-    
     _contentTitle = (title.length > 0) && ![title isEqual:@""] && (title != nil);
     // 黑色遮盖
     actionSheet.frame = [UIScreen mainScreen].bounds;
@@ -62,10 +61,10 @@ static CGFloat const spaceLine = 0.8f;
     
     NSString* curStr;
     va_list list;
-    if(otherTitles){
-        [self setupBtnWithTitle:otherTitles];
+    if(otherButtonTitles){
+        [self setupBtnWithTitle:otherButtonTitles];
         
-        va_start(list, otherTitles);
+        va_start(list, otherButtonTitles);
         while ((curStr = va_arg(list, NSString*))) {
             [self setupBtnWithTitle:curStr];
             
@@ -82,7 +81,7 @@ static CGFloat const spaceLine = 0.8f;
     // cancel button
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, sheetView.frame.size.height - kActionSheetButtonHeight - spaceLine, kActionSheetScreenWidth, kActionSheetButtonHeight);
-    [btn setTitle:cancelTitle forState:UIControlStateNormal];
+    [btn setTitle:cancelButtonTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     btn.titleLabel.font = kActionSheetButtonTitleFontSize;
     btn.backgroundColor = kActionSheetButtonBackgroundColor;

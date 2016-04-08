@@ -6,7 +6,7 @@ A ActionSheet Demo
 
 Like weChat App ActionSheet
 
-### Intorduce
+### Intro
 
 This Demo is based in HJCActionSheet, As a requestment, I add a new titlte, such as UIActionSheet.
 
@@ -15,31 +15,28 @@ This Demo is based in HJCActionSheet, As a requestment, I add a new titlte, such
 ### Usage	
 
 ``` 
-- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate  
-						labelText:(NSString *)title 
-					 CancelTitle:(NSString *)cancelTitle 
-		 OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;
+- (instancetype)initWithTitle:(NSString *)title
+                     delegate:(id<HJCActionSheetDelegate>)delegate
+            cancelButtonTitle:(NSString *)cancelButtonTitle
+            otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
 ```
 
-You can drag HJCActionSheet to your Project
+You can drag HJCActionSheet File to your Project
 
 ``` objective-c
-    HJCActionSheet *sheet = [[HJCActionSheet alloc] initWithDelegate:self labelText:@"HJActionSheet" CancelTitle:@"取消" OtherTitles:@"拍照", @"从相册中选取" , nil];
+    HJCActionSheet *sheet = [[HJCActionSheet alloc] initWithTitle:@"HJCActionSheet" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"相册", @"照片", nil];
     [sheet show];
+
 ```
 
-If you don't need show title ,you can this
-
-``` objective-c
-    HJCActionSheet *sheet = [[HJCActionSheet alloc] initWithDelegate:self labelText:nil CancelTitle:@"取消" OtherTitles:@"拍照", @"从相册中选取" , nil];
-    [sheet show];
+``` 
+#pragma mark - HJCActionSheetDelegate
+- (void)actionSheet:(HJCActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 ```
 
-   ![HJCAtionSheet intro](https://github.com/sauteam/HJCActionSheet/blob/master/intro.gif) 
+![HJCAtionSheet intro](https://github.com/sauteam/HJCActionSheet/blob/master/intro.gif) 
 
 ### License
 
 HJCActionSheet is under MIT License. See LICENSE file for more information. 
-
-
 

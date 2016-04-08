@@ -21,13 +21,14 @@
 
 @interface HJCActionSheet : UIView
 
-
+//@property (nonatomic, copy) NSString *title;
 @property (nonatomic, weak) id <HJCActionSheetDelegate> delegate;
 
-- (instancetype)initWithDelegate:(id<HJCActionSheetDelegate>)delegate
-                       labelText:(NSString *)title
-                     CancelTitle:(NSString *)cancelTitle
-                     OtherTitles:(NSString*)otherTitles ,... NS_REQUIRES_NIL_TERMINATION;
+/*** init HJCActionSheet */
+- (instancetype)initWithTitle:(NSString *)title
+                     delegate:(id<HJCActionSheetDelegate>)delegate
+            cancelButtonTitle:(NSString *)cancelButtonTitle
+            otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
 
 - (void)show;
