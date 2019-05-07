@@ -22,6 +22,7 @@ static CGFloat const spaceLine = 0.8f;
 @interface HJCActionSheet (){
     int _tag;
     BOOL _contentTitle;
+    CGFloat _safeInsetsBottom;
 }
 
 @property (nonatomic, weak) HJCActionSheet *actionSheet;
@@ -75,12 +76,12 @@ static CGFloat const spaceLine = 0.8f;
     CGRect sheetViewF = sheetView.frame;
     
 #pragma mark - add
-    sheetViewF.size.height = kActionSheetButtonHeight * _tag + kActionSheetMargin + (_contentTitle?kActionSheetTitleHeight+spaceLine:0) + spaceLine * (_tag - 1);
+    sheetViewF.size.height = kActionSheetButtonHeight * _tag + kActionSheetMargin + (_contentTitle?kActionSheetTitleHeight+spaceLine:0) + spaceLine * (_tag - 1) + _safeInsetsBottom;
     sheetView.frame = sheetViewF;
     
     // cancel button
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(0, sheetView.frame.size.height - kActionSheetButtonHeight - spaceLine, kActionSheetScreenWidth, kActionSheetButtonHeight);
+    btn.frame = CGRectMake(0, sheetView.frame.size.height - kActionSheetButtonHeight - spaceLine - _safeInsetsBottom, kActionSheetScreenWidth, kActionSheetButtonHeight);
     [btn setTitle:cancelButtonTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     btn.titleLabel.font = kActionSheetButtonTitleFontSize;
@@ -172,6 +173,16 @@ static CGFloat const spaceLine = 0.8f;
     UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return theImage;
+}
+
+#pragma mark - style
+- (void)safeAreaInsetsDidChange
+{
+    if (@available(iOS 11.0, *)) {
+        if (self.safeAreaInsets.bottom > 0) {
+            _safeInsetsBottom = self.safeAreaInsets.bottom;
+        }
+    }
 }
 
 @end
